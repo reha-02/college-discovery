@@ -1,0 +1,203 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --brand-gradient: linear-gradient(135deg, #4f52e7 0%, #323382 100%);
+  --card-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 10px 24px rgba(15, 23, 42, 0.06);
+  --card-shadow-hover: 0 16px 36px rgba(15, 23, 42, 0.1);
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background-color: #f7f8fb;
+    color: #111827;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-white rounded-lg border border-gray-200;
+    box-shadow: var(--card-shadow);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+
+  .card:hover {
+    box-shadow: var(--card-shadow-hover);
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-sm text-white transition-all duration-200;
+    background: var(--brand-gradient);
+  }
+
+  .btn-primary:hover {
+    @apply opacity-90;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-sm border border-brand-200 text-brand-700 bg-brand-50 transition-all duration-200;
+  }
+
+  .btn-secondary:hover {
+    @apply bg-brand-100;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm text-gray-600 transition-all duration-200 hover:bg-gray-100;
+  }
+
+  .input-base {
+    @apply w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-white text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-300 focus:border-transparent transition-all duration-200;
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold;
+  }
+
+  .skeleton {
+    @apply bg-gray-200 rounded-lg animate-skeleton-pulse;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 99px;
+}
+
+.tab-indicator {
+  position: relative;
+}
+
+.tab-indicator::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--brand-gradient);
+  border-radius: 2px 2px 0 0;
+}
+
+.dark body {
+  background-color: #0f172a;
+  color: #e5e7eb;
+}
+
+.dark .bg-white,
+.dark .bg-white\/80,
+.dark .bg-white\/90,
+.dark .bg-white\/95 {
+  background-color: rgba(15, 23, 42, 0.95) !important;
+}
+
+.dark .bg-gray-50,
+.dark .bg-\[\#f5f6f8\] {
+  background-color: #111827 !important;
+}
+
+.dark .card {
+  background-color: #111827;
+  border-color: #334155;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.24);
+}
+
+.dark .border-gray-100,
+.dark .border-gray-200,
+.dark .border-gray-300 {
+  border-color: #334155 !important;
+}
+
+.dark .text-gray-400 {
+  color: #94a3b8 !important;
+}
+
+.dark .text-gray-500,
+.dark .text-gray-600,
+.dark .text-gray-700 {
+  color: #cbd5e1 !important;
+}
+
+.dark .text-gray-800,
+.dark .text-gray-900,
+.dark .text-gray-950 {
+  color: #f8fafc !important;
+}
+
+.dark .input-base,
+.dark input,
+.dark select,
+.dark textarea {
+  background-color: #0f172a !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #64748b !important;
+}
+
+.dark .btn-secondary {
+  background-color: rgba(79, 82, 231, 0.15);
+  border-color: rgba(129, 147, 251, 0.45);
+  color: #c7d7fe;
+}
+
+.dark .btn-ghost {
+  color: #cbd5e1;
+}
+
+.dark .btn-ghost:hover {
+  background-color: #1e293b;
+}
+
+.dark .bg-gray-100 {
+  background-color: #1e293b !important;
+}
+
+.dark .bg-brand-50 {
+  background-color: rgba(79, 82, 231, 0.18) !important;
+}
+
+.dark .text-brand-700,
+.dark .text-brand-600 {
+  color: #a5b8fd !important;
+}
+
+.dark .skeleton {
+  background-color: #334155;
+}

@@ -1,0 +1,179 @@
+// prisma/schema.prisma
+// College discovery data model.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  // Neon uses a direct connection for migrations.
+  directUrl = env("DATABASE_URL")
+}
+
+// NextAuth models.
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String         @id @default(cuid())
+  name          String?
+  email         String?        @unique
+  emailVerified DateTime?
+  image         String?
+  passwordHash  String?
+  accounts      Account[]
+  sessions      Session[]
+  savedColleges SavedCollege[]
+  savedComparisons SavedComparison[]
+  reviews       Review[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// College domain models.
+
+model College {
+  id          Int            @id @default(autoincrement())
+  name        String
+  location    String
+  city        String
+  state       String
+  fees        Int
+  rating      Float
+  description String         @db.Text
+  imageUrl    String?
+  courses     Course[]
+  placements  Placement[]
+  reviews     Review[]
+  savedBy     SavedCollege[]
+  createdAt   DateTime       @default(now())
+
+  @@index([name])
+  @@index([city])
+  @@index([state])
+  @@index([rating])
+  @@index([fees])
+  @@index([city, rating])
+  @@index([state, city])
+  @@index([fees, rating])
+}
+
+model Course {
+  id        Int     @id @default(autoincrement())
+  name      String
+  duration  String
+  fees      Int
+  collegeId Int
+  college   College @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+
+  @@unique([collegeId, name])
+  @@index([collegeId])
+  @@index([collegeId, fees])
+}
+
+model Placement {
+  id             Int     @id @default(autoincrement())
+  year           Int
+  avgPackage     Float
+  highestPackage Float
+  placementRate  Float
+  collegeId      Int
+  college        College @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+
+  @@unique([collegeId, year])
+  @@index([collegeId])
+  @@index([collegeId, year])
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  content   String   @db.Text
+  rating    Float
+  userId    String
+  collegeId Int
+  college   College  @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([collegeId])
+  @@index([collegeId, createdAt])
+  @@index([userId])
+  @@index([rating])
+}
+
+model SavedCollege {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  collegeId Int
+  college   College  @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, collegeId])
+  @@index([userId])
+  @@index([collegeId])
+  @@index([userId, createdAt])
+}
+
+model SavedComparison {
+  id         Int      @id @default(autoincrement())
+  userId     String
+  collegeIds Int[]
+  collegeKey String
+  title      String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, collegeKey])
+  @@index([userId])
+  @@index([userId, createdAt])
+}
+
+model EmailOtp {
+  id           String    @id @default(cuid())
+  email        String
+  purpose      String
+  codeHash     String
+  passwordHash String?
+  name         String?
+  expiresAt    DateTime
+  consumedAt   DateTime?
+  attempts     Int       @default(0)
+  createdAt    DateTime  @default(now())
+
+  @@index([email, purpose, createdAt])
+  @@index([expiresAt])
+}
